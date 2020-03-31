@@ -182,7 +182,7 @@ export default {
     // 获取歌单详情
     async getPlaylistDetail() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/playlist/detail?id=' + this.id
+        'http://www.liaowang.xyz:3000/playlist/detail?id=' + this.id
       )
       this.avatarUrl = resp.playlist.creator.avatarUrl
       this.nickname = resp.playlist.creator.nickname
@@ -192,7 +192,7 @@ export default {
     // 获取歌单评论
     async getPlaylistComments() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/comment/playlist?id=' +
+        'http://www.liaowang.xyz:3000/comment/playlist?id=' +
           this.id +
           '&limit=' +
           this.pageSize +
@@ -207,7 +207,7 @@ export default {
     async playMusic(id) {
       // 获取歌曲播放地址
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/song/url?id=' + id
+        'http://www.liaowang.xyz:3000/song/url?id=' + id
       )
       if (!resp.data[0].url) {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')

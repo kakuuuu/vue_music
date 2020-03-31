@@ -14,8 +14,6 @@ import {
   Submenu,
   MenuItem,
   MenuItemGroup,
-  Breadcrumb,
-  BreadcrumbItem,
   Card,
   Row,
   Col,
@@ -59,8 +57,6 @@ Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItemGroup)
 Vue.use(MenuItem)
-Vue.use(Breadcrumb)
-Vue.use(BreadcrumbItem)
 Vue.use(Card)
 Vue.use(Row)
 Vue.use(Col)

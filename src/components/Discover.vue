@@ -61,9 +61,7 @@
         >
           <div class="img-wrap">
             <img :src="item.cover + '?param=250y150'" alt="" />
-            <span class="el-icon-caret-right icon-play"></span>
             <div class="num-wrap">
-              <div class="el-icon-caret-right icon-play"></div>
               <div class="num">{{ item.playCount }}</div>
             </div>
           </div>
@@ -101,13 +99,13 @@ export default {
 
   methods: {
     async getBanner() {
-      const { data: res } = await this.$http.get('http://localhost:3000/banner')
+      const { data: res } = await this.$http.get('http://www.liaowang.xyz:3000/banner')
       if (res.code !== 200) return this.$message.error(res)
       this.banners = res.banners
     },
     async getPersonalizedPlaylist() {
       const { data: res } = await this.$http.get(
-        'http://localhost:3000/top/playlist?limit=12&order=new'
+        'http://www.liaowang.xyz:3000/top/playlist?limit=12&order=new'
       )
       // console.log(res)
       if (res.code !== 200) return this.$message.error(res)
@@ -115,14 +113,14 @@ export default {
     },
     async getPersonalizedMv() {
       const { data: res } = await this.$http.get(
-        'http://localhost:3000/mv/first?limit=5'
+        'http://www.liaowang.xyz:3000/mv/first?limit=5'
       )
       // console.log(res)
       this.mvs = res.data
     },
     async getPersonalizedNewsong() {
       const { data: res } = await this.$http.get(
-        'http://localhost:3000/personalized/newsong'
+        'http://www.liaowang.xyz:3000/personalized/newsong'
       )
       // console.log(res)
       this.newSongs = res.result
@@ -131,7 +129,7 @@ export default {
     async playMusic(id) {
       // 获取歌曲播放地址
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/song/url?id=' + id
+        'http://www.liaowang.xyz:3000/song/url?id=' + id
       )
       if (!resp.data[0].url) {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
@@ -221,30 +219,6 @@ export default {
 
 .discovery-container .recommend .items .item .img-wrap {
   position: relative;
-}
-
-.discovery-container .recommend .items .item .img-wrap .icon-play {
-  position: absolute;
-  right: 10px;
-  bottom: 13px;
-  width: 40px;
-  height: 40px;
-  color: #dd6d60;
-  font-size: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.8);
-  opacity: 0;
-}
-
-.discovery-container .recommend .items .item .img-wrap .icon-play::before {
-  transform: translateX(3px);
-}
-
-.discovery-container .recommend .items .item .img-wrap:hover .icon-play {
-  opacity: 1;
 }
 
 .discovery-container .recommend .items .item .name {
@@ -381,13 +355,6 @@ export default {
   font-size: 15px;
   padding-right: 5px;
   padding-top: 2px;
-}
-
-.discovery-container .mvs .items .item .img-wrap .num-wrap .icon-play {
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  margin-right: 5px;
 }
 
 .discovery-container .mvs .items .item .info-wrap .name {

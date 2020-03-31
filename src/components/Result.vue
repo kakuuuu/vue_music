@@ -163,7 +163,7 @@ export default {
 
     async search() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/search?keywords=' +
+        'http://www.liaowang.xyz:3000/search?keywords=' +
           this.keywords +
           '&type=' +
           this.type +
@@ -190,7 +190,7 @@ export default {
     async playMusic(id) {
       // 获取歌曲播放地址
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/song/url?id=' + id
+        'http://www.liaowang.xyz:3000/song/url?id=' + id
       )
       if (!resp.data[0].url) {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')

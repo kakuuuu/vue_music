@@ -152,14 +152,14 @@ export default {
     // 获取精品歌单
     async getTopPlaylist() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/top/playlist/highquality?limit=1&cat=' + this.tag
+        'http://www.liaowang.xyz:3000/top/playlist/highquality?limit=1&cat=' + this.tag
       )
       this.topPlayList = resp.playlists[0]
     },
     // 获取歌单列表
     async getPlaylist() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/top/playlist/highquality?cat=' +
+        'http://www.liaowang.xyz:3000/top/playlist/highquality?cat=' +
           this.tag +
           '&limit=' +
           this.pageSize

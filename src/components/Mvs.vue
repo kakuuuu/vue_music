@@ -129,7 +129,7 @@ export default {
 
     async getMvs() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/top/mv?area=' +
+        'http://www.liaowang.xyz:3000/top/mv?area=' +
           this.area +
           '&offset=' +
           (this.pageNum - 1) * this.pageSize +
@@ -141,7 +141,6 @@ export default {
         // this.total = resp.count
       }
       this.mvs = resp.data
-      console.log(resp.data)
     },
     toMv(id) {
       this.$router.push(`/mv?id=${id}`)

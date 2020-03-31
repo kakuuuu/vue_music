@@ -157,7 +157,7 @@ export default {
     // 获取MV播放地址
     async getMvUrl() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/mv/url?id=' + this.id
+        'http://www.liaowang.xyz:3000/mv/url?id=' + this.id
       )
       this.url = resp.data.url
     },
@@ -165,12 +165,12 @@ export default {
     // 获取MV详情
     async getMvDetail() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/mv/detail?mvid=' + this.id
+        'http://www.liaowang.xyz:3000/mv/detail?mvid=' + this.id
       )
       this.mvInfo = resp.data
       // 获取歌手头像
       const { data: resp1 } = await this.$http.get(
-        'http://localhost:3000/artists?id=' + this.mvInfo.artists[0].id
+        'http://www.liaowang.xyz:3000/artists?id=' + this.mvInfo.artists[0].id
       )
       this.icon = resp1.artist.picUrl
     },
@@ -178,7 +178,7 @@ export default {
     // 获取MV评论
     async getMvComment() {
       const { data: resp } = await this.$http.get(
-        `http://localhost:3000/comment/mv?id=${this.id}&limit=${
+        `http://www.liaowang.xyz:3000/comment/mv?id=${this.id}&limit=${
           this.pageSize
         }&offset=${(this.pageNum - 1) * this.pageSize}`
       )
@@ -190,7 +190,7 @@ export default {
     // 获取相关MV
     async getSimiMvUrl() {
       const { data: resp } = await this.$http.get(
-        'http://localhost:3000/simi/mv?mvid=' + this.id
+        'http://www.liaowang.xyz:3000/simi/mv?mvid=' + this.id
       )
       this.simiMvs = resp.mvs
     },

@@ -8,16 +8,6 @@ import './assets/css/global.css'
 import axios from 'axios'
 Vue.config.productionTip = false
 
-// 配置请求的跟路径
-// axios.defaults.baseURL = 'http://localhost:3000'
-// axios.interceptors.request.use(config => {
-//   config.headers.Authorization = window.sessionStorage.getItem('token')
-//   // console.log(config)
-//   return config
-// })
-// axios.interceptors.response.use(config => {
-//   return config
-// })
 Vue.filter('playTimeFormat', function(originVal) {
   let min = parseInt(originVal / 1000 / 60)
   if (min < 10) {
