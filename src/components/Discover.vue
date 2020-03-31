@@ -107,7 +107,7 @@ export default {
     },
     async getPersonalizedPlaylist() {
       const { data: res } = await this.$http.get(
-        'http://localhost:3000/top/playlist?limit=10&order=new'
+        'http://localhost:3000/top/playlist?limit=12&order=new'
       )
       // console.log(res)
       if (res.code !== 200) return this.$message.error(res)
@@ -137,7 +137,7 @@ export default {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
       }
       // 设置给父组件的播放地址
-      this.$parent.$parent.musicUrl = resp.data[0].url
+      this.$parent.$parent.$parent.$parent.musicUrl = resp.data[0].url
     },
     toPlaylist(id) {
       this.$router.push(`/playlist?id=${id}`)

@@ -114,15 +114,6 @@
       </div>
     </div>
     <!-- 分页器 -->
-    <el-pagination
-      @current-change="handleCurrentChange"
-      background
-      layout="prev, pager, next"
-      :total="total"
-      :current-page="pageNum"
-      :page-size="pageSize"
-    >
-    </el-pagination>
   </div>
 </template>
 
@@ -135,7 +126,7 @@ export default {
       total: 0,
       // 页码
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 12,
       tag: '全部',
       // 顶部精品歌单
       topPlayList: {},
@@ -163,7 +154,6 @@ export default {
       const { data: resp } = await this.$http.get(
         'http://localhost:3000/top/playlist/highquality?limit=1&cat=' + this.tag
       )
-      console.log(resp)
       this.topPlayList = resp.playlists[0]
     },
     // 获取歌单列表

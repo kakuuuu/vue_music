@@ -29,11 +29,6 @@
                   <div class="name-wrap">
                     <!-- 名称 -->
                     <span>{{ item.name }}</span>
-                    <!-- mv图标 -->
-                    <span
-                      v-if="item.mvid !== 0"
-                      class="iconfont icon-mv"
-                    ></span>
                   </div>
                   <!-- 二级标题 -->
                   <span v-if="item.alias.length !== 0">{{
@@ -63,7 +58,6 @@
                 <span class="num">{{ item.playCount | playNumFormat }}</span>
               </div>
               <img :src="item.coverImgUrl + '?param=200y200'" alt="" />
-              <span class="iconfont icon-play"></span>
             </div>
             <p class="name">{{ item.name }}</p>
           </div>
@@ -80,9 +74,7 @@
           >
             <div class="img-wrap">
               <img :src="item.cover + '?param=250y150'" alt="" />
-              <span class="iconfont icon-play"></span>
               <div class="num-wrap">
-                <div class="iconfont icon-play"></div>
                 <div class="num">{{ item.playCount | playNumFormat }}</div>
               </div>
               <span class="time">{{ item.duration | playTimeFormat }}</span>
@@ -118,7 +110,7 @@ export default {
       total: 0,
       // 页码
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 12,
       keywords: '',
       activeIndex: 'songs',
       songs: [],
@@ -176,9 +168,9 @@ export default {
           '&type=' +
           this.type +
           '&limit=' +
-          (this.type === 1004 ? 8 : 10) +
+          (this.type === 1004 ? 8 : 12) +
           '&offset=' +
-          (this.pageNum - 1) * (this.type === 1004 ? 8 : 10)
+          (this.pageNum - 1) * (this.type === 1004 ? 8 : 12)
       )
       if (resp.code !== 200) {
         return
@@ -204,7 +196,7 @@ export default {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
       }
       // 设置给父组件的播放地址
-      this.$parent.$parent.musicUrl = resp.data[0].url
+      this.$parent.$parent.$parent.$parent.musicUrl = resp.data[0].url
     },
     toPlaylist(id) {
       this.$router.push(`/playlist?id=${id}`)
@@ -247,7 +239,7 @@ export default {
 .result-container .items {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .result-container .items .item {

@@ -199,8 +199,6 @@ export default {
           '&offset=' +
           (this.pageNum - 1) * this.pageSize
       )
-      console.log('歌单评论')
-      console.log(resp)
       this.comments = resp.comments
       this.hotComments = resp.hotComments
       this.total = resp.total
@@ -215,7 +213,7 @@ export default {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
       }
       // 设置给父组件的播放地址
-      this.$parent.$parent.musicUrl = resp.data[0].url
+      this.$parent.$parent.$parent.$parent.musicUrl = resp.data[0].url
     }
   }
 }
