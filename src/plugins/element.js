@@ -40,7 +40,10 @@ import {
   Checkbox,
   Upload,
   Carousel,
-  CarouselItem
+  CarouselItem,
+  Collapse,
+  CollapseItem,
+  Image
 } from 'element-ui'
 
 Vue.use(Button)
@@ -82,5 +85,8 @@ Vue.use(Checkbox)
 Vue.use(Upload)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
+Vue.use(Image)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
