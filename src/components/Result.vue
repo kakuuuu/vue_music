@@ -8,40 +8,26 @@
     </div>
     <el-tabs v-model="activeIndex">
       <el-tab-pane label="歌曲" name="songs">
-        <table class="el-table">
-          <thead>
-            <th></th>
-            <th>音乐标题</th>
-            <th>歌手</th>
-            <th>专辑</th>
-            <th>时长</th>
-          </thead>
-          <tbody>
-            <tr
-              class="el-table__row"
-              v-for="(item, index) in songs"
-              :key="index"
-              @click="playMusic(item.id)"
-            >
-              <td>{{ index + 1 }}</td>
-              <td>
-                <div class="song-wrap">
-                  <div class="name-wrap">
-                    <!-- 名称 -->
-                    <span>{{ item.name }}</span>
-                  </div>
-                  <!-- 二级标题 -->
-                  <span v-if="item.alias.length !== 0">{{
-                    item.alias[0]
-                  }}</span>
-                </div>
-              </td>
-              <td>{{ item.artists[0].name }}</td>
-              <td>{{ item.album.name }}</td>
-              <td>{{ item.duration | playTimeFormat }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <el-table
+          :data="songs"
+          stripe
+          highlight-current-row
+          style="width: 100%;"
+          @row-dblclick="playMusic"
+        >
+          <el-table-column type="index"> </el-table-column>
+          <el-table-column prop="name" label="音乐标题" width="180">
+          </el-table-column>
+          <el-table-column prop="artists[0].name" label="歌手" width="180">
+          </el-table-column>
+          <el-table-column prop="item.album.name" label="专辑">
+          </el-table-column>
+          <el-table-column label="时长">
+            <template slot-scope="scope">
+              {{ scope.row.duration | playTimeFormat }}
+            </template>
+          </el-table-column>
+        </el-table>
       </el-tab-pane>
 
       <el-tab-pane label="歌单" name="lists">
@@ -187,16 +173,20 @@ export default {
       }
       this.total = this.count
     },
-    async playMusic(id) {
+    async playMusic(row) {
       // 获取歌曲播放地址
       const { data: resp } = await this.$http.get(
-        'http://www.liaowang.xyz:3000/song/url?id=' + id
+        'http://www.liaowang.xyz:3000/song/url?id=' + row.id
       )
       if (!resp.data[0].url) {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
       }
+      const { data: resp2 } = await this.$http.get(
+        'http://www.liaowang.xyz:3000/song/detail?ids=' + row.id
+      )
       // 设置给父组件的播放地址
-      this.$parent.$parent.$parent.$parent.musicUrl = resp.data[0].url
+      this.$store.commit('changesong', resp2.songs[0])
+      this.$store.commit('changemusicurl', resp.data[0].url)
     },
     toPlaylist(id) {
       this.$router.push(`/playlist?id=${id}`)

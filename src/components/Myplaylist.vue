@@ -3,14 +3,12 @@
     <div class="top-wrap">
       <div class="img-wrap">
         <!-- 封面 -->
-        <img :src="playlist.coverImgUrl" alt="" />
+        <img :src="playlist.tracks[0].al.picUrl" alt="" />
       </div>
       <div class="info-wrap">
         <!-- 名字 -->
-        <p class="title">{{ playlist.name }}</p>
+        <p class="title"><el-tag type="danger"> 歌单</el-tag>{{ playlist.name }}</p>
         <div class="author-wrap">
-          <!-- 头像 -->
-          <!-- 神经病VUE,不加v-if="playlist.creator !== undefined" 报错 -->
           <img
             class="avatar"
             :src="playlist.creator.avatarUrl"
@@ -24,11 +22,6 @@
           <!-- 时间 -->
           <span class="time">{{ playlist.createTime | dateFormat }}</span>
         </div>
-
-        <el-button type="danger" @click="changemylist">
-          <i class="el-icon-video-play"></i>
-          播放全部
-        </el-button>
         <div class="tag-wrap">
           <span class="title">标签:</span>
           <el-tag
@@ -50,7 +43,7 @@
     <el-tabs v-model="activeIndex">
       <el-tab-pane label="歌曲列表" name="1">
         <el-table :data="playlist.tracks" stripe highlight-current-row style="width: 100%;" @row-dblclick="playMusic">
-          <el-table-column type="index"> </el-table-column>
+          <el-table-column type="index" > </el-table-column>
           <el-table-column>
             <template slot-scope="scope">
               <el-image
@@ -59,10 +52,10 @@
                 :fit="fit"
               ></el-image>
             </template>
+          </el-table-column >
+          <el-table-column prop="name" label="音乐标题" sortable width="180">
           </el-table-column>
-          <el-table-column prop="name" label="音乐标题" width="180">
-          </el-table-column>
-          <el-table-column prop="ar[0].name" label="歌手" width="180">
+          <el-table-column prop="ar[0].name" label="歌手" sortable width="180">
           </el-table-column>
           <el-table-column prop="al.name" label="专辑"> </el-table-column>
           <el-table-column label="时长">
@@ -71,79 +64,6 @@
             </template>
           </el-table-column>
         </el-table>
-      </el-tab-pane>
-      <el-tab-pane :label="`评论(${total})`" name="2">
-        <!-- 精彩评论 -->
-        <div
-          class="comment-wrap"
-          v-if="hotComments !== undefined && hotComments.length !== 0"
-        >
-          <p class="title">
-            精彩评论<span class="number">({{ hotComments.length }})</span>
-          </p>
-          <div class="comments-wrap">
-            <!-- 评论 -->
-            <div class="item" v-for="(item, index) in hotComments" :key="index">
-              <div class="icon-wrap">
-                <!-- 头像 -->
-                <img :src="item.user.avatarUrl + '?param=50y50'" alt="" />
-              </div>
-              <div class="content-wrap">
-                <div class="content">
-                  <span class="name">{{ item.user.nickname }}</span>
-                  <span class="comment">：{{ item.content }}</span>
-                </div>
-                <!-- 回复 -->
-                <div class="re-content" v-if="item.beReplied.length !== 0">
-                  <span class="name">{{
-                    item.beReplied[0].user.nickname
-                  }}</span>
-                  <span class="comment">：{{ item.beReplied[0].content }}</span>
-                </div>
-                <div class="date">{{ item.time | dateFormat }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 最新评论 -->
-        <div class="comment-wrap">
-          <p class="title">
-            最新评论<span class="number">({{ total }})</span>
-          </p>
-          <div class="comments-wrap">
-            <!-- 评论 -->
-            <div class="item" v-for="(item, index) in comments" :key="index">
-              <div class="icon-wrap">
-                <!-- 头像 -->
-                <img :src="item.user.avatarUrl + '?param=50y50'" alt="" />
-              </div>
-              <div class="content-wrap">
-                <div class="content">
-                  <span class="name">{{ item.user.nickname }}</span>
-                  <span class="comment">：{{ item.content }}</span>
-                </div>
-                <!-- 回复 -->
-                <div class="re-content" v-if="item.beReplied.length !== 0">
-                  <span class="name">{{
-                    item.beReplied[0].user.nickname
-                  }}</span>
-                  <span class="comment">：{{ item.beReplied[0].content }}</span>
-                </div>
-                <div class="date">{{ item.time | dateFormat }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 分页器 -->
-        <el-pagination
-          @current-change="handleCurrentChange"
-          background
-          layout="prev, pager, next"
-          :total="total"
-          :current-page="pageNum"
-          :page-size="pageSize"
-        >
-        </el-pagination>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -162,46 +82,14 @@ export default {
       pageNum: 1,
       pageSize: 10,
 
-      playlist: {},
-      hotComments: [],
-      comments: []
+      playlist: {}
+
     }
   },
   created() {
-    this.id = this.$route.query.id
-    this.getPlaylistDetail()
-    this.getPlaylistComments()
+    this.playlist = this.$store.state.myplaylist
   },
   methods: {
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.getPlaylistComments()
-    },
-
-    // 获取歌单详情
-    async getPlaylistDetail() {
-      const { data: resp } = await this.$http.get(
-        'http://www.liaowang.xyz:3000/playlist/detail?id=' + this.id
-      )
-      this.avatarUrl = resp.playlist.creator.avatarUrl
-      this.nickname = resp.playlist.creator.nickname
-      this.playlist = resp.playlist
-    },
-
-    // 获取歌单评论
-    async getPlaylistComments() {
-      const { data: resp } = await this.$http.get(
-        'http://www.liaowang.xyz:3000/comment/playlist?id=' +
-          this.id +
-          '&limit=' +
-          this.pageSize +
-          '&offset=' +
-          (this.pageNum - 1) * this.pageSize
-      )
-      this.comments = resp.comments
-      this.hotComments = resp.hotComments
-      this.total = resp.total
-    },
     async playMusic(row) {
       // 获取歌曲播放地址
       const { data: resp } = await this.$http.get(
@@ -216,9 +104,6 @@ export default {
       // 设置给父组件的播放地址
       this.$store.commit('changesong', resp2.songs[0])
       this.$store.commit('changemusicurl', resp.data[0].url)
-    },
-    changemylist() {
-      this.$store.commit('changelist', this.playlist)
     }
   }
 }
@@ -250,6 +135,9 @@ export default {
       width: 30px;
       height: 30px;
       border-radius: 25px;
+      margin-left: 10px;
+    }
+    span{
       margin-left: 10px;
     }
   }

@@ -126,7 +126,7 @@ export default {
       total: 0,
       // 页码
       pageNum: 1,
-      pageSize: 12,
+      pageSize: 24,
       tag: '全部',
       // 顶部精品歌单
       topPlayList: {},

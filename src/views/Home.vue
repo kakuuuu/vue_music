@@ -6,7 +6,7 @@
       <el-aside :width="isCollapse ? '64px' : '100px'">
         <!-- 侧边导航 -->
         <el-menu
-          default-active="2"
+          default-active="/discover"
           class="el-menu-vertical-demo"
           :router="true"
           background-color="#eaeff2"
@@ -26,6 +26,9 @@
               <i class="el-icon-headset"></i>
               <span slot="title">发现音乐</span>
             </el-menu-item>
+            <el-menu-item :index="'/myplaylist'" class="small-menu-item">
+              <i class="el-icon-arrow-right"></i>
+            </el-menu-item>
           </div>
         </el-menu>
       </el-aside>
@@ -33,8 +36,7 @@
         <!-- 头部 -->
         <el-header>
           <div class="top-container">
-            <div class="leftf">
-            </div>
+            <div class="leftf"></div>
             <div class="rightf" @keyup.enter="toResult">
               <el-input
                 placeholder="请输入内容"
@@ -53,7 +55,31 @@
             </transition>
           </div>
           <div class="player">
+            <div class="song">
+              <div class="img-wrap">
+                <el-image
+                  style="width: 50px; height: 50px;"
+                  :src=cursong.al.picUrl
+                >
+                </el-image>
+              </div>
+              <div>
+                <p>{{cursong.name}}</p>
+                <p>{{cursong.ar[0].name}}</p>
+              </div>
+            </div>
             <audio :src="musicUrl" autoplay controls id="music"></audio>
+            <!-- <el-popover
+              placement="top-start"
+              title="标题"
+              width="200"
+              trigger="click"
+              content=" 这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+            >
+              <el-button slot="reference"
+                ><i class="el-icon-s-unfold"></i
+              ></el-button>
+            </el-popover> -->
           </div>
         </el-main>
       </el-container>
@@ -70,8 +96,20 @@ export default {
       query: '',
       inputVal: '',
       n: 0,
-      btnStatus: 0
+      btnStatus: 0,
+      cursong: {}
     }
+  },
+  watch: {
+    '$store.state.currentsong': function() {
+      this.cursong = this.$store.state.currentsong
+    },
+    '$store.state.musicurl': function () {
+      this.musicUrl = this.$store.state.musicurl
+    }
+  },
+  created() {
+    this.getMyPlaylist()
   },
   methods: {
     toResult() {
@@ -85,6 +123,21 @@ export default {
     },
     setUrl(val) {
       this.musicUrl = val
+    },
+    async getMyPlaylist() {
+      const { data: resp } = await this.$http.get(
+        'http://www.liaowang.xyz:3000/playlist/detail?id=4951102632'
+      )
+      this.$store.commit('changelist', resp.playlist)
+      this.$store.commit('changesong', resp.playlist.tracks[0])
+      this.cursong = resp.playlist.tracks[0]
+      const { data: resp2 } = await this.$http.get(
+        'http://www.liaowang.xyz:3000/song/url?id=' + resp.playlist.tracks[0].id
+      )
+      if (!resp2.data[0].url) {
+        return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
+      }
+      this.$store.commit('changemusicurl', resp2.data[0].url)
     }
   }
 }
@@ -118,10 +171,6 @@ export default {
 
 .body {
   background-color: #ffffff;
-}
-.player {
-  height: 30px;
-  width: 1000px;
 }
 audio {
   width: 100%;
@@ -157,7 +206,7 @@ audio {
   color: #333;
   text-align: center;
   line-height: 200px;
-  height: 700px;
+  height: 800px;
 }
 .main-nav {
   display: -ms-flexbox;
@@ -173,6 +222,9 @@ audio {
   font-size: 20px;
   width: 150px;
 }
+.small-menu-item {
+  width: 40px;
+}
 .main {
   height: 550px;
   flex: 1;
@@ -182,9 +234,19 @@ audio {
 .player {
   background: #f1f3f4;
   height: 60px;
+  width: 1000px;
+  display: flex;
   position: fixed;
+  justify-content: center;
   bottom: 0;
   left: 0;
   width: 100%;
+}
+.song {
+  width: 20%;
+  font-size: 12px;
+  line-height: 12px;
+    display: flex;
+  align-items: center;
 }
 </style>

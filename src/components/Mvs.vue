@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       // 总条数
-      total: 20,
+      total: 40,
       // 页码
       pageNum: 1,
       pageSize: 8,

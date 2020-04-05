@@ -41,7 +41,8 @@ import {
   CarouselItem,
   Collapse,
   CollapseItem,
-  Image
+  Image,
+  Popover
 } from 'element-ui'
 
 Vue.use(Button)
@@ -84,5 +85,6 @@ Vue.use(CarouselItem)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Image)
+Vue.use(Popover)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
