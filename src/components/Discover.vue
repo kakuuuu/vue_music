@@ -107,7 +107,6 @@ export default {
       const { data: res } = await this.$http.get(
         'http://www.liaowang.xyz:3000/top/playlist?limit=12&order=new'
       )
-      // console.log(res)
       if (res.code !== 200) return this.$message.error(res)
       this.playList = res.playlists
     },
@@ -115,14 +114,12 @@ export default {
       const { data: res } = await this.$http.get(
         'http://www.liaowang.xyz:3000/mv/first?limit=5'
       )
-      // console.log(res)
       this.mvs = res.data
     },
     async getPersonalizedNewsong() {
       const { data: res } = await this.$http.get(
         'http://www.liaowang.xyz:3000/personalized/newsong'
       )
-      // console.log(res)
       this.newSongs = res.result
     },
     async login() {},
@@ -134,8 +131,13 @@ export default {
       if (!resp.data[0].url) {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
       }
+      const { data: resp2 } = await this.$http.get(
+        'http://www.liaowang.xyz:3000/song/detail?ids=' + id
+      )
       // 设置给父组件的播放地址
-      this.$parent.$parent.$parent.$parent.musicUrl = resp.data[0].url
+      this.$store.commit('changesong', resp2.songs[0])
+      this.$store.commit('changemusicurl', resp.data[0].url)
+      // this.$parent.$parent.$parent.$parent.musicUrl = resp.data[0].url
     },
     toPlaylist(id) {
       this.$router.push(`/playlist?id=${id}`)

@@ -14,20 +14,22 @@
             <span>歌手：{{ playmusic.ar[0].name }}</span>
           </div>
         </div>
-        <div class="lyrics">
-          <ul
-            class="infinite-list"
-            v-infinite-scroll="load"
-            style="overflow: auto;"
-          >
-            <li
+        <div class="lyric-content" ref="lyric">
+          <div class="lyric-item-wrapper">
+            <!-- <p :class="['lyric-item', { active: activeIndex === index }]"
               v-for="(item, index) in playingLyric"
               :key="index"
-              class="infinite-list-item"
+              @click="lyricClick(item)">{{ item.txt }}</p> -->
+            <div
+              :class="['lyric-item', { active: activeIndex === index }]"
+              v-for="(item, index) in playingLyric"
+              :key="index"
+              @click="lyricClick(item)"
             >
               {{ item.txt }}
-            </li>
-          </ul>
+            </div>
+          </div>
+          <!-- <div class="play-btn" @click="playClick">{{ playBtnText }}</div> -->
         </div>
       </div>
     </div>
@@ -110,6 +112,7 @@
 
 <script>
 import Lyric from 'lyric-parser'
+import BScroll from 'better-scroll'
 export default {
   data() {
     return {
@@ -118,14 +121,15 @@ export default {
       currentLyric: null,
       playingLyric: null,
       id: '',
-      activeIndex: '1',
+      activeIndex: 0,
       // 总条数
       total: 0,
       // 页码
       pageNum: 1,
       pageSize: 10,
       hotComments: [],
-      comments: []
+      comments: [],
+      scroll: null
     }
   },
   created() {
@@ -156,13 +160,10 @@ export default {
       const { data: resp } = await this.$http.get(
         'http://www.liaowang.xyz:3000/lyric?id=' + this.playmusic.id
       )
-      if (resp.lrc.lyric) {
+      if (resp.lrc.lyric !== null) {
         this.lyrics = resp.lrc.lyric
         this.currentLyric = new Lyric(resp.lrc.lyric)
         this.playingLyric = this.currentLyric.lines
-        console.log(this.playingLyric)
-      } else {
-        this.lyrics = '无歌词'
       }
     },
     async getPlaymusicComments() {
@@ -177,7 +178,33 @@ export default {
       this.comments = resp.comments
       this.hotComments = resp.hotComments
       this.total = resp.total
+    },
+    init() {
+      if (this.playmusic) {
+        this.$parent.$parent.$parent.$parent.$refs.audio.addEventListener(
+          'timeupdate',
+          (e) => {
+            var timeStamp = e.target.currentTime * 1000
+            this.activeIndex = this.playingLyric.findIndex((item, index) => {
+              return item.time < timeStamp && this.playingLyric[index + 1]
+                ? this.playingLyric[index + 1].time > timeStamp
+                : true
+            })
+            if (this.activeIndex <= (this.playingLyric.length - 7)) {
+              this.scroll.scrollTo(0, -27 * this.activeIndex, 1000)
+            }
+          }
+        )
+      }
+    },
+    lyricScrollInit() {
+      this.scroll = new BScroll(this.$refs.lyric)
+      // this.scroll.scrollTo(0, 50)
     }
+  },
+  mounted() {
+    this.init()
+    this.lyricScrollInit()
   }
 }
 </script>
@@ -192,7 +219,7 @@ export default {
   margin-right: 20px;
 }
 .info-wrap {
-  margin-left: 10%;
+  margin-left: 20px;
   p {
     font-size: 26px;
   }
@@ -201,72 +228,100 @@ export default {
     margin-right: 20px;
   }
 }
-.lyrics ul{
-  height: 300px;
-  font-size: 15px;
-}
- .comment-wrap {
+.comment-wrap {
   width: 80%;
   padding: 0 10% 0 10%;
   margin-top: 50px;
   margin-bottom: 70px;
 }
 
- .comment-wrap .title {
+.comment-wrap .title {
   font-size: 18px;
 }
 
- .comment-wrap .title .number {
+.comment-wrap .title .number {
   color: black;
   font-size: 16px;
 }
 
- .comment-wrap .item {
+.comment-wrap .item {
   display: flex;
   padding-top: 20px;
 }
 
- .comment-wrap .item .icon-wrap {
+.comment-wrap .item .icon-wrap {
   margin-right: 15px;
 }
 
- .comment-wrap .item .icon-wrap img {
+.comment-wrap .item .icon-wrap img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
 }
 
- .comment-wrap .item:not(:last-child) .content-wrap {
+.comment-wrap .item:not(:last-child) .content-wrap {
   border-bottom: 1px solid #f2f2f1;
 }
 
- .comment-wrap .item .date {
+.comment-wrap .item .date {
   color: #bebebe;
   font-size: 14px;
 }
 
- .comment-wrap .item .content-wrap {
+.comment-wrap .item .content-wrap {
   padding-bottom: 20px;
   flex: 1;
 }
 
- .comment-wrap .item .content-wrap .name {
+.comment-wrap .item .content-wrap .name {
   color: #517eaf;
   font-size: 14px;
 }
 
- .comment-wrap .item .content-wrap .comment {
+.comment-wrap .item .content-wrap .comment {
   font-size: 14px;
 }
 
- .comment-wrap .item .content-wrap .content,
- .comment-wrap .item .content-wrap .re-content {
+.comment-wrap .item .content-wrap .content,
+.comment-wrap .item .content-wrap .re-content {
   margin-bottom: 10px;
 }
 
- .comment-wrap .item .content-wrap .re-content {
+.comment-wrap .item .content-wrap .re-content {
   padding: 10px;
   background-color: #e6e5e6;
   border-radius: 5px;
+}
+.lyric-content {
+  position: relative;
+  height: 189px;
+  margin-top: 30px;
+  overflow: hidden;
+  // background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  user-select: none;
+  .lyric-item-wrapper {
+    .lyric-item {
+      color: #999;
+      height: 27px;
+      transition: all 1s;
+      cursor: pointer;
+      padding-left: 1em;
+      &.active {
+        color: #333;
+      }
+    }
+  }
+  .play-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #999;
+    cursor: pointer;
+    font-size: 14px;
+    &:hover {
+      color: #333;
+    }
+  }
 }
 </style>

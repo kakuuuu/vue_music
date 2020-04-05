@@ -49,7 +49,13 @@
     </div>
     <el-tabs v-model="activeIndex">
       <el-tab-pane label="歌曲列表" name="1">
-        <el-table :data="playlist.tracks" stripe highlight-current-row style="width: 100%;" @row-dblclick="playMusic">
+        <el-table
+          :data="playlist.tracks"
+          stripe
+          highlight-current-row
+          style="width: 100%;"
+          @row-dblclick="playMusic"
+        >
           <el-table-column type="index"> </el-table-column>
           <el-table-column>
             <template slot-scope="scope">
@@ -218,7 +224,24 @@ export default {
       this.$store.commit('changemusicurl', resp.data[0].url)
     },
     changemylist() {
-      this.$store.commit('changelist', this.playlist)
+      this.$confirm('此操作覆盖原有歌单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$store.commit('changelist', this.playlist)
+          this.$message({
+            type: 'success',
+            message: '导入成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     }
   }
 }
