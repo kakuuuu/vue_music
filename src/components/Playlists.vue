@@ -167,7 +167,6 @@ export default {
       this.playlists = resp.playlists
       this.total = resp.total
     },
-
     toPlaylist(id) {
       this.$router.push(`/playlist?id=${id}`)
     }
