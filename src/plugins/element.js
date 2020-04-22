@@ -42,7 +42,8 @@ import {
   Collapse,
   CollapseItem,
   Image,
-  Popover
+  Popover,
+  InfiniteScroll
 } from 'element-ui'
 
 Vue.use(Button)
@@ -86,5 +87,6 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Image)
 Vue.use(Popover)
+Vue.use(InfiniteScroll)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

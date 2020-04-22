@@ -4,9 +4,13 @@
   </div>
 </template>
 <script>
+import Scroll from './components/scroll.vue'
 export default {
   name: 'app',
-  components: {}
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    Scroll
+  }
 }
 </script>
 <style>

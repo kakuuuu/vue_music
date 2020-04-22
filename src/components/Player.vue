@@ -16,10 +16,6 @@
         </div>
         <div class="lyric-content" ref="lyric">
           <div class="lyric-item-wrapper">
-            <!-- <p :class="['lyric-item', { active: activeIndex === index }]"
-              v-for="(item, index) in playingLyric"
-              :key="index"
-              @click="lyricClick(item)">{{ item.txt }}</p> -->
             <div
               :class="['lyric-item', { active: activeIndex === index }]"
               v-for="(item, index) in playingLyric"
@@ -29,7 +25,6 @@
               {{ item.txt }}
             </div>
           </div>
-          <!-- <div class="play-btn" @click="playClick">{{ playBtnText }}</div> -->
         </div>
       </div>
     </div>
@@ -138,6 +133,26 @@ export default {
     this.getPlaymusicComments()
   },
   methods: {
+    throttle(fn, interval) {
+      var last
+      var timer
+      interval = interval || 200
+      return function() {
+        var th = this
+        var args = arguments
+        var now = +new Date()
+        if (last && now - last < interval) {
+          clearTimeout(timer)
+          timer = setTimeout(function() {
+            last = now
+            fn.apply(th, args)
+          }, interval)
+        } else {
+          last = now
+          fn.apply(th, args)
+        }
+      }
+    },
     handleCurrentChange(val) {
       this.pageNum = val
       this.getPlaymusicComments()
@@ -183,14 +198,14 @@ export default {
       if (this.playmusic) {
         this.$parent.$parent.$parent.$parent.$refs.audio.addEventListener(
           'timeupdate',
-          (e) => {
+          e => {
             var timeStamp = e.target.currentTime * 1000
             this.activeIndex = this.playingLyric.findIndex((item, index) => {
               return item.time < timeStamp && this.playingLyric[index + 1]
                 ? this.playingLyric[index + 1].time > timeStamp
                 : true
             })
-            if (this.activeIndex <= (this.playingLyric.length - 7)) {
+            if (this.activeIndex <= this.playingLyric.length - 7) {
               this.scroll.scrollTo(0, -27 * this.activeIndex, 1000)
             }
           }
@@ -199,11 +214,10 @@ export default {
     },
     lyricScrollInit() {
       this.scroll = new BScroll(this.$refs.lyric)
-      // this.scroll.scrollTo(0, 50)
     }
   },
   mounted() {
-    this.init()
+    this.throttle(this.init(), 500)
     this.lyricScrollInit()
   }
 }

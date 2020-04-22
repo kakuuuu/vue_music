@@ -15,19 +15,19 @@
         >
           <div class="main-nav">
             <el-menu-item :index="'/mvs'">
-              <i class="el-icon-film"></i>
-              <span slot="title">最新MV</span>
+              <!-- <i class="el-icon-film"></i> -->
+              <span slot="title">MVS</span>
             </el-menu-item>
             <el-menu-item :index="'/playlists'">
-              <i class="el-icon-s-data"></i>
-              <span slot="title">推荐歌单</span>
+              <!-- <i class="el-icon-s-data"></i> -->
+              <span slot="title">PLAYLIST</span>
             </el-menu-item>
             <el-menu-item :index="'/discover'">
-              <i class="el-icon-headset"></i>
-              <span slot="title">发现音乐</span>
+              <!-- <i class="el-icon-headset"></i> -->
+              <span slot="title">DISCOVER</span>
             </el-menu-item>
             <el-menu-item :index="'/myplaylist'" class="small-menu-item">
-              <i class="el-icon-arrow-right"></i>
+              <i class="el-icon-arrow-left"></i>
             </el-menu-item>
           </div>
         </el-menu>
@@ -36,10 +36,14 @@
         <!-- 头部 -->
         <el-header>
           <div class="top-container">
-            <div class="leftf"></div>
+            <div class="leftf">
+              <i class="el-icon-house" @click="gohome"></i>
+              <i class="el-icon-arrow-left" @click="goback"></i>
+              <i class="el-icon-arrow-right" @click="goright"></i>
+            </div>
             <div class="rightf" @keyup.enter="toResult">
               <el-input
-                placeholder="请输入内容"
+                placeholder="SEARCH"
                 v-model="inputVal"
                 class="input-with-select"
               >
@@ -55,8 +59,8 @@
             </transition>
           </div>
           <div class="player">
-            <div class="song">
-              <div class="img-wrap">
+            <div class="song" v-if="cursong">
+              <div class="img-wrap" @click="toPlayer">
                 <el-image
                   style="width: 50px; height: 50px;"
                   :src=cursong.al.picUrl
@@ -68,18 +72,7 @@
                 <p>{{cursong.ar[0].name}}</p>
               </div>
             </div>
-            <audio :src="musicUrl" autoplay controls id="music"></audio>
-            <!-- <el-popover
-              placement="top-start"
-              title="标题"
-              width="200"
-              trigger="click"
-              content=" 这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
-            >
-              <el-button slot="reference"
-                ><i class="el-icon-s-unfold"></i
-              ></el-button>
-            </el-popover> -->
+            <audio :src="musicUrl" ref="audio" autoplay controls id="music"></audio>
           </div>
         </el-main>
       </el-container>
@@ -138,6 +131,18 @@ export default {
         return this.$message.error('该资源为VIP专享，暂不支持播放 ！')
       }
       this.$store.commit('changemusicurl', resp2.data[0].url)
+    },
+    toPlayer(id) {
+      this.$router.push('/player')
+    },
+    gohome() {
+      this.$router.push('/home')
+    },
+    goback() {
+      this.$router.go(-1)
+    },
+    goright() {
+      this.$router.go(1)
     }
   }
 }
@@ -196,6 +201,9 @@ audio {
 }
 .leftf {
   float: left;
+  i{
+    margin-left: 10px;
+  }
 }
 .el-input {
   width: 400px;
@@ -206,7 +214,7 @@ audio {
   color: #333;
   text-align: center;
   line-height: 200px;
-  height: 800px;
+  height: 1000px;
 }
 .main-nav {
   display: -ms-flexbox;
