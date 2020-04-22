@@ -55,7 +55,13 @@
         <el-main>
           <div class="main">
             <transition name="fold-left">
-              <router-view></router-view>
+              <!-- <router-view></router-view> -->
+              <keep-alive v-if="$route.meta.keepAlive">
+                <!-- 需要缓存的视图组件 -->
+                <router-view > </router-view>
+              </keep-alive>
+              <!-- 不需要缓存的视图组件 -->
+              <router-view v-if="!$route.meta.keepAlive"> </router-view>
             </transition>
           </div>
           <div class="player">
@@ -63,16 +69,22 @@
               <div class="img-wrap" @click="toPlayer">
                 <el-image
                   style="width: 50px; height: 50px;"
-                  :src=cursong.al.picUrl
+                  :src="cursong.al.picUrl"
                 >
                 </el-image>
               </div>
               <div>
-                <p>{{cursong.name}}</p>
-                <p>{{cursong.ar[0].name}}</p>
+                <p>{{ cursong.name }}</p>
+                <p>{{ cursong.ar[0].name }}</p>
               </div>
             </div>
-            <audio :src="musicUrl" ref="audio" autoplay controls id="music"></audio>
+            <audio
+              :src="musicUrl"
+              ref="audio"
+              autoplay
+              controls
+              id="music"
+            ></audio>
           </div>
         </el-main>
       </el-container>
@@ -97,7 +109,7 @@ export default {
     '$store.state.currentsong': function() {
       this.cursong = this.$store.state.currentsong
     },
-    '$store.state.musicurl': function () {
+    '$store.state.musicurl': function() {
       this.musicUrl = this.$store.state.musicurl
     }
   },
@@ -201,7 +213,7 @@ audio {
 }
 .leftf {
   float: left;
-  i{
+  i {
     margin-left: 10px;
   }
 }
@@ -254,7 +266,7 @@ audio {
   width: 20%;
   font-size: 12px;
   line-height: 12px;
-    display: flex;
+  display: flex;
   align-items: center;
 }
 </style>

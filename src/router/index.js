@@ -19,14 +19,62 @@ const routes = [
     component: Home,
     redirect: '/discover',
     children: [
-      { path: '/discover', component: Discover },
-      { path: '/playlists', component: Playlists },
-      { path: '/playlist', component: Playlist },
-      { path: '/mv', component: Mv },
-      { path: '/mvs', component: Mvs },
-      { path: '/result', component: Result },
-      { path: '/myplaylist', component: Myplaylist },
-      { path: '/player', component: Player }
+      {
+        path: '/discover',
+        component: Discover,
+        meta: {
+          keepAlive: true // 需要被缓存
+        }
+      },
+      {
+        path: '/playlists',
+        component: Playlists,
+        meta: {
+          keepAlive: true // 需要被缓存
+        }
+      },
+      {
+        path: '/playlist',
+        component: Playlist,
+        meta: {
+          keepAlive: false
+        }
+      },
+      {
+        path: '/mv',
+        component: Mv,
+        meta: {
+          keepAlive: false
+        }
+      },
+      {
+        path: '/mvs',
+        component: Mvs,
+        meta: {
+          keepAlive: true // 需要被缓存
+        }
+      },
+      {
+        path: '/result',
+        component: Result,
+        meta: {
+          keepAlive: false
+        }
+      },
+      {
+        path: '/myplaylist',
+        component: Myplaylist,
+        meta: {
+          keepAlive: true // 需要被缓存
+        }
+      },
+      {
+        path: '/player',
+        component: Player,
+        meta: {
+          keepAlive: false
+        }
+      }
     ]
   }
 ]
