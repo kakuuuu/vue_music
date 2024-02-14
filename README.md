@@ -20,8 +20,6 @@
 
 ### 项目预览
 
-#### 网页:[http://liaowang.xyz](http://liaowang.xyz)
-
 #### Github:[https://github.com/kakuuuu/vue_music](https://github.com/kakuuuu/vue_music)
 
 ---
