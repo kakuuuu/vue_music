@@ -1,0 +1,49 @@
+/* 全局样式表 */
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-width: 1366px;
+  -webkit-touch-callout: none; /*系统默认菜单被禁用*/
+  -webkit-user-select: none; /*webkit浏览器*/
+  -khtml-user-select: none; /*早期浏览器*/
+  -moz-user-select: none; /*火狐*/
+  -ms-user-select: none; /*IE10*/
+  user-select: none;
+}
+body{
+  overflow-x:hidden;
+  overflow-y:hidden;
+}
+ul,li{
+  list-style: none;
+}
+.el-breadcrumb {
+  margin-bottom: 15px;
+  font-size: 12px;
+}
+.el-table {
+  margin-top: 15px;
+  font-size: 12px;
+}
+/* 解决el-table第一行与其他行对不齐的问题 */
+.el-table th {
+  display: table-cell !important;
+}
+.el-pagination {
+  margin-top: 15px;
+}
+::-webkit-scrollbar {width: 8px;background-color: #fafafa;}
+::-webkit-scrollbar-button {width: 0;height: 5px;}
+::-webkit-scrollbar-thumb {background: #e1e1e2;border-radius: 5px;}
+::-webkit-scrollbar-thumb:hover {background: #cfcfd1;}
+
+/* ::-webkit-scrollbar {
+  width: 0 !important;
+}
+::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0;
+} */
